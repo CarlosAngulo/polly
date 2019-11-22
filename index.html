@@ -59,18 +59,17 @@
         var poll = {};
         var elements = {}
 
-        docRef.get().then(function(doc) {
+        docRef.onSnapshot(function(doc) {
             if (doc.exists) {
                 poll = doc.data();
                 current = doc.data().current;
-                getElements();
+                if(current >= 0) {
+                    getElements();
+                }
             } else {
                 console.log("No such document!");
             }
-        }).catch(function(error) {
-            console.log("Error getting document:", error);
-        });
-
+        })
         
         function getElements() {
             elements.question = document.getElementById('question');

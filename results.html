@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+    <div class="cuestionario">
+        <p id="question"></p>
+        <form action="">
+            <div>
+                <button id="nextBtn">Iniciar</button>
+            </div>
+        </form>
+        <canvas id="myChart"></canvas>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
+
+    <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-firestore.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-firestore.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyBcN-u28_faCdV3TTk-_WkJHnq5xnhGAWY",
+            authDomain: "encuesta-adriana.firebaseapp.com",
+            databaseURL: "https://encuesta-adriana.firebaseio.com",
+            projectId: "encuesta-adriana",
+            storageBucket: "encuesta-adriana.appspot.com",
+            messagingSenderId: "374628579523",
+            appId: "1:374628579523:web:6b454c9681e8e8d1494a76",
+            measurementId: "G-D249MZ1S3B"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        var db = firebase.firestore();
+        var docRef = db.collection("habilidades-blandas").doc("J6lZyiWbHMvjbTIeYmcU");
+        var vote = undefined;
+        var unsubscribe;
+        var current = -1;
+        var poll = {};
+        var elements = {}
+
+        docRef.get().then(function(doc) {
+            if (doc.exists) {
+                poll = doc.data();
+                current = 0;
+                docRef.update({current});
+                getElements();
+            } else {
+                console.log("No such document!");
+            }
+        }).catch(function(error) {
+            console.log("Error getting document:", error);
+        });
+
+        
+        function getElements() {
+            elements.question = document.getElementById('question');
+            elements.btn = document.querySelector('button');
+            elements.btn.addEventListener('click', function(evt) {
+                elements.btn.innerText = 'Siguiente'
+                evt.preventDefault();
+                next();
+            });
+        }
+
+        function next() {
+            current++;
+            console.log(current);
+            docRef.update({current});
+            elements.question.innerHTML = poll[`question${current + 1 }`].text;
+            vote = db.collection("habilidades-blandas").doc(`question${current + 1}`);
+            vote.onSnapshot( function(doc) {
+                console.log(doc.data());
+            });
+            fillForm(current);
+        }
+
+        function fillForm(index) {
+            updateData();
+        }
+
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        
+        
+        var config = {
+			type: 'doughnut',
+			data: {
+				datasets: [{
+					data: [30, 4, 50, 5],
+					backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(255, 159, 64)',
+                        'rgb(255, 205, 86)',
+                        'rgb(75, 192, 192)',
+					],
+					label: 'Dataset 1'
+				}],
+				labels: [
+					'Red',
+					'Orange',
+					'Yellow',
+					'Green'
+				]
+			},
+			options: {
+				responsive: true
+			}
+        };
+        
+
+        var chart = new Chart(ctx, config);
+
+        function updateData() {
+            config.data.datasets = [{
+                data: [10,10,10,3]
+            }];
+            console.log(config)
+            window.chart.update();
+        }
+
+    </script>
+</body>
+</html>
