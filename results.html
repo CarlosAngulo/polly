@@ -50,12 +50,43 @@
         var unsubscribe;
         var current = -1;
         var poll = {};
-        var elements = {}
+        var elements = {};
+        var ctx = document.getElementById('myChart').getContext('2d');
+
+        var backgroundColors = [
+            'rgb(255, 99, 132)',
+            'rgb(255, 159, 64)',
+            'rgb(75, 192, 192)',
+        ];
+        
+        var config = {
+			type: 'doughnut',
+			data: {
+				datasets: [{
+					data: [30, 4, 50],
+					backgroundColor: backgroundColors,
+					label: 'Dataset 1'
+				}],
+				labels: [
+					'Opción 1',
+					'Opción 2',
+					'Opción 3'
+				]
+			},
+			options: {
+                responsive: true,
+                animation: {
+                    duration: 100
+                }
+			}
+        };
+
+        var chart = new Chart(ctx, config);
 
         docRef.get().then(function(doc) {
             if (doc.exists) {
                 poll = doc.data();
-                current = 0;
+                current = -1;
                 docRef.update({current});
                 getElements();
             } else {
@@ -65,7 +96,6 @@
             console.log("Error getting document:", error);
         });
 
-        
         function getElements() {
             elements.question = document.getElementById('question');
             elements.btn = document.querySelector('button');
@@ -83,52 +113,25 @@
             elements.question.innerHTML = poll[`question${current + 1 }`].text;
             vote = db.collection("habilidades-blandas").doc(`question${current + 1}`);
             vote.onSnapshot( function(doc) {
+                // poll.
+                config.data.labels = [poll[`question${current + 1 }`].option1, poll[`question${current + 1 }`].option2, poll[`question${current + 1 }`].option3];
+                config.data.datasets = [{
+                    data: [doc.data().votes1, doc.data().votes2, doc.data().votes3],
+                    backgroundColor: backgroundColors,
+                    label: 'Dataset 1'
+                }]
                 console.log(doc.data());
+                console.log(poll[`question${current + 1 }`].option1, poll[`question${current + 1 }`].option2, poll[`question${current + 1 }`].option3);
+                updateData();
             });
             fillForm(current);
         }
 
         function fillForm(index) {
-            updateData();
+            // updateData();
         }
 
-
-        var ctx = document.getElementById('myChart').getContext('2d');
-        
-        
-        var config = {
-			type: 'doughnut',
-			data: {
-				datasets: [{
-					data: [30, 4, 50, 5],
-					backgroundColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(255, 159, 64)',
-                        'rgb(255, 205, 86)',
-                        'rgb(75, 192, 192)',
-					],
-					label: 'Dataset 1'
-				}],
-				labels: [
-					'Red',
-					'Orange',
-					'Yellow',
-					'Green'
-				]
-			},
-			options: {
-				responsive: true
-			}
-        };
-        
-
-        var chart = new Chart(ctx, config);
-
         function updateData() {
-            config.data.datasets = [{
-                data: [10,10,10,3]
-            }];
-            console.log(config)
             window.chart.update();
         }
 

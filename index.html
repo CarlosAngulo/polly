@@ -5,10 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <style>
+        .hide {
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
-    <div class="cuestionario">
+    <div id="questionaire">
         <p id="question"></p>
         <form action="">
             <div>
@@ -58,13 +63,22 @@
         var current = 0;
         var poll = {};
         var elements = {}
+        getElements();
 
         docRef.onSnapshot(function(doc) {
             if (doc.exists) {
                 poll = doc.data();
                 current = doc.data().current;
                 if(current >= 0) {
-                    getElements();
+                    fillForm(current);
+                    elements.questionaire.className='normal';
+                    elements.submit.disabled = false;
+                    elements.radios.forEach (el => {
+                        el.disabled = false,
+                        el.checked = false
+                    });
+                } else {
+                    elements.questionaire.className='hide';
                 }
             } else {
                 console.log("No such document!");
@@ -76,8 +90,8 @@
             elements.options = document.querySelectorAll('label');
             elements.radios = document.querySelectorAll('input[type=radio]');
             elements.submit = document.querySelector('button');
+            elements.questionaire = document.getElementById('questionaire');
             elements.submit.addEventListener('click', sendAnswer);
-            fillForm(current);
         }
 
         function fillForm(index) {
@@ -93,17 +107,6 @@
                 if (el.checked) {
                     elements.submit.disabled = true;
                     elements.radios.forEach (el => el.disabled = true);
-                    
-                    // changes = {
-                    //     [`question${current + 1}`]: {
-                    //         ...poll[`question${current + 1}`],
-                    //         [`answer${index+1}`]: {
-                    //             ...poll[`question${current + 1}`][`answer${index + 1}`],
-                    //             votes: firebase.firestore.FieldValue.increment(5)
-                    //         }
-                    //     }
-                    // }
-
                     vote = db.collection("habilidades-blandas").doc(`question${current + 1}`)
                     vote.update({[`votes${index + 1 }`]: firebase.firestore.FieldValue.increment(1)})
                     .then(function() {
