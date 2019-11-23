@@ -5,17 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <style>
+        body {
+            font-family: 'Segoe', Arial, Helvetica, sans-serif;
+            text-align: center;
+            height: 100%;
+            padding: 40px;
+        }
+        .hide {
+            display: none;
+        }
+        #question {
+            font-size: 23px;
+            font-weight: 500;
+            max-width: 800px;
+            margin: auto;
+        }
+        button {
+            background-color: #AB04F2;
+            color: white;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.5rem;
+            padding: 10px 15px;
+            cursor: pointer;
+            margin: 30px auto 0;
+            width: 300px;
+            outline: none;
+        }
+        #canvass {
+            max-width: 1000px;
+            margin: 80px auto;
+        }
+    </style>
 </head>
 <body>
 
-    <div class="cuestionario">
+    <div id="questionaire">
         <p id="question"></p>
+        <div id="canvass">
+            <canvas id="myChart"></canvas>
+        </div>
         <form action="">
             <div>
                 <button id="nextBtn">Iniciar</button>
             </div>
         </form>
-        <canvas id="myChart"></canvas>
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
@@ -54,16 +92,16 @@
         var ctx = document.getElementById('myChart').getContext('2d');
 
         var backgroundColors = [
-            'rgb(255, 99, 132)',
-            'rgb(255, 159, 64)',
-            'rgb(75, 192, 192)',
+            '#5107F2',
+            '#22D8B7',
+            '#D6F204',
         ];
         
         var config = {
 			type: 'doughnut',
 			data: {
 				datasets: [{
-					data: [30, 4, 50],
+					data: [],
 					backgroundColor: backgroundColors,
 					label: 'Dataset 1'
 				}],
@@ -83,20 +121,23 @@
 
         var chart = new Chart(ctx, config);
 
+        getElements();
+
         docRef.get().then(function(doc) {
             if (doc.exists) {
                 poll = doc.data();
                 current = -1;
                 docRef.update({current});
-                getElements();
             } else {
                 console.log("No such document!");
             }
         }).catch(function(error) {
             console.log("Error getting document:", error);
         });
-
+        
         function getElements() {
+            elements.canvas = document.getElementById('canvass');
+            elements.canvas.className = 'hide';
             elements.question = document.getElementById('question');
             elements.btn = document.querySelector('button');
             elements.btn.addEventListener('click', function(evt) {
@@ -108,6 +149,7 @@
 
         function next() {
             current++;
+            elements.canvas.className='normal';
             console.log(current);
             docRef.update({current});
             elements.question.innerHTML = poll[`question${current + 1 }`].text;
