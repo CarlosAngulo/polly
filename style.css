@@ -3,7 +3,7 @@
 }
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background: #ECE4F2;
+    background: #D4DBF5;
 }
 .hide {
     display: none;
@@ -12,6 +12,10 @@ body {
     max-width: 600px;
     margin: auto;
     padding: 10px;
+}
+h1 {
+    font-size: 25px;
+    text-align: center;
 }
 #question {
     font-size: 23px;
@@ -48,4 +52,5 @@ button {
     font-size: 1.5rem;
     padding: 10px 15px; 
     cursor: pointer;
+    margin-top: 125px;
 }
