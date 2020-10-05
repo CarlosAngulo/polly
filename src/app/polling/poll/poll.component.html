@@ -1,0 +1,15 @@
+<div *ngIf="!init" class="wrapper">
+    <div class="questionaire" *ngIf="pollResults$ | async as pollResults">
+        <h1>HABILIDADES BLANDAS</h1>
+        <p class="questionaire__question">{{ pollResults.pollData.question }}</p>
+        <form autocomplete="off" [formGroup]="forma" (ngSubmit)="sendAnswer(currentQuestion)">
+            <fieldset [disabled]="isDisabled">
+                <div [class]="'questionaire__option--' + (i + 1)" *ngFor="let option of pollResults.pollData.options; index as i">
+                    <input formControlName="pollOption" name="pollOption" type="radio" [id]="'option' + (i + 1)" [value]="i + 1" />
+                    <label [for]="'option' + (i + 1)">{{ option }}</label>
+                </div>
+                <button [ngClass]="isDisabled ? 'questionaire__button questionaire__button--disable' : 'questionaire__button'" type="submit">Enviar</button>
+            </fieldset>
+        </form>
+    </div>
+</div>

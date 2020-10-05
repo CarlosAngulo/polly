@@ -1,0 +1,74 @@
+* {
+    box-sizing: border-box;
+}
+
+fieldset {
+    border: none;
+}
+
+.questionaire {
+    max-width: 600px;
+    margin: auto;
+    padding: 10px;
+
+    font-family: 'Roboto', sans-serif;
+    background: #393a4a;
+    color: white;
+
+    h1 {
+        font-size: 30px;
+        text-align: center;
+        font-weight: 900;
+    }
+
+    %seleccion {
+        margin: 40px auto;
+        font-size: 20px;
+        border-radius: 5px;
+        padding: 10px;
+        color: white;
+        text-transform: uppercase;
+    }
+
+    &__option {
+        &--1 {
+            @extend %seleccion;
+            border: 2px solid #ab04f2;
+        }
+
+        &--2 {
+            @extend %seleccion;
+            border: 2px solid #7c07f2;
+        }
+
+        &--3 {
+            @extend %seleccion;
+            border: 2px solid #5107f2;
+        }
+    }
+
+    &__question {
+        font-size: 23px;
+        font-weight: 500;
+    }
+
+    &__button {
+        background-color: #ab04f2;
+        color: white;
+        display: block;
+        width: 100%;
+        text-align: center;
+        text-decoration: none;
+        border: none;
+        border-radius: 30px;
+        font-size: 1.5rem;
+        padding: 10px 15px;
+        cursor: pointer;
+        margin-top: 125px;
+
+        &--disable {
+            opacity: 0.3;
+            cursor: default;
+        }
+    }
+}
