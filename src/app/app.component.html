@@ -1,0 +1,25 @@
+<div *ngIf="showPoll">
+    <app-poll
+        *ngIf="!adminUser"
+        #poll
+        (sendAnswer)="sendAnswer($event)"
+        [pollResults$]="pollResults$"
+        [totalQuestions]="totalQuestions"
+        [currentQuestion]="currentQuestion"
+        [init]="init"
+    >
+    </app-poll>
+    <app-results
+        *ngIf="adminUser"
+        (updateQuestion)="updateQuestion()"
+        (initPoll)="initPoll()"
+        (resetPoll)="resetPoll()"
+        [pollResults$]="pollResults$"
+        [totalQuestions]="totalQuestions"
+        [currentQuestion]="currentQuestion"
+        [init]="init"
+    ></app-results>
+</div>
+<button class="button" (click)="hostLogin()">Init as Host</button>
+<p *ngIf="init$ | async" [style.display]="'none'">{{ init }}</p>
+<!-- this "p" tag is used only to retrieve init$ async data -->

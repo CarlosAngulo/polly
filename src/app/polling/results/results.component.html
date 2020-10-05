@@ -1,0 +1,16 @@
+<div *ngIf="!init" class="wrapper">
+    <div class="questionaire" *ngIf="pollResults$ | async as pollResults">
+        <p class="questionaire__question">{{ pollResults.pollData.question }}</p>
+        <div class="questionaire__canvas">
+            <canvas
+                baseChart
+                [data]="[pollResults.results.votes1, pollResults.results.votes2, pollResults.results.votes3]"
+                [labels]="pollResults.pollData.options"
+                [chartType]="doughnutChartType"
+                [colors]="doughnutChartColors"
+            ></canvas>
+        </div>
+    </div>
+</div>
+<button *ngIf="init" class="questionaire__button" (click)="nextQuestion()">Iniciar</button>
+<button *ngIf="!init" class="questionaire__button" (click)="nextQuestion()">Siguiente</button>

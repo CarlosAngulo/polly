@@ -1,0 +1,38 @@
+body {
+    font-family: 'Segoe', Arial, Helvetica, sans-serif;
+    text-align: center;
+    height: 100%;
+    background: none;
+    color: rgb(0, 0, 0);
+}
+
+.questionaire {
+    &__question {
+        font-size: 23px;
+        font-weight: 500;
+        max-width: 800px;
+        margin: auto;
+        text-align: center;
+    }
+
+    &__button {
+        background-color: #ab04f2;
+        color: white;
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        border: none;
+        border-radius: 30px;
+        font-size: 1.5rem;
+        padding: 10px 15px;
+        cursor: pointer;
+        margin: 30px auto 0;
+        width: 300px;
+        outline: none;
+    }
+
+    &__canvas {
+        max-width: 1000px;
+        margin: 70px auto;
+    }
+}
